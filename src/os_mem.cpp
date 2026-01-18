@@ -1,5 +1,6 @@
 #include "os_mem.h"
 #include "common.h"
+#include <cstring>
 
 #ifdef _WIN32
     #include <windows.h>
@@ -19,7 +20,6 @@
 #else
     #include <sys/mman.h>
     #include <unistd.h>
-    #include <cstring>
     void safe_print(const char* msg) {
         write(STDOUT_FILENO, msg, strlen(msg));
     }
@@ -35,7 +35,7 @@
     }
 #endif
 
-// Linker definitions
+// Linker definitions for static constants
 constexpr size_t Config::PAGE_SIZE;
 constexpr size_t Config::MAX_SMALL_SIZE;
 constexpr uint32_t Config::MAGIC_COOKIE;

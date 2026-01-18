@@ -82,21 +82,21 @@ Bulk Fetch: Fetch 32 items from the Slab Bitmap.
 Randomization: Randomly rotate the bitmap scan to break predictability.
 
 Refill: Populate TLAB and return user pointer.
-
-🛠️ Build & Usage
-Prerequisites
+```
+## 🛠️ Build & Usage
+### Prerequisites
 CMake 3.10+
 
 C++17 compliant compiler (MSVC, GCC, Clang)
 
-Build Instructions
+## Build Instructions
 
-# 1. Generate Build Files
+### 1. Generate Build Files
 cmake -B build
 
-# 2. Compile (Release Mode is critical for performance)
+### 2. Compile (Release Mode is critical for performance)
 cmake --build build --config Release
-Running the Suite
+## Running the Suite
 The build produces two executables for comparison:
 
 HSA_Secure (or .exe): The Hardened Allocator.
@@ -104,14 +104,16 @@ HSA_Secure (or .exe): The Hardened Allocator.
 HSA_Standard (or .exe): The Standard System Allocator (Baseline).
 
 
-# Run Performance Benchmark
+### Run Performance Benchmark
 ./build/Release/HSA_Secure bench
 
-# Run Security Verification
+### Run Security Verification
 ./build/Release/HSA_Secure test-uaf       # Test Use-After-Free
+
 ./build/Release/HSA_Secure test-redzone   # Test Buffer Overflow
+
 ./build/Release/HSA_Secure test-guard     # Test Guard Page Faults
-🛡️ Verification & Testing Results
+## 🛡️ Verification & Testing Results
 The repository includes a vulnerability_showcase suite that demonstrates the allocator defeating live exploits.
 
 1. Use-After-Free (UAF)
@@ -129,11 +131,12 @@ Attack: Write sequentially past the end of a large object.
 
 Result: Blocked. Process crashes with STATUS_ACCESS_VIOLATION (Windows) or Segmentation fault (Linux) at the exact boundary.
 
-⚙️ Configuration (common.h)
+## ⚙️ Configuration (common.h)
 You can tune the allocator's behavior by modifying static constants:
 
-
+```text
 struct Config {
+
     // Security
     static constexpr uint32_t MAGIC_COOKIE = 0xDEADBEEF; // Double-free protection
     static constexpr size_t REDZONE_SIZE = 8;            // Size of canary
@@ -142,5 +145,6 @@ struct Config {
     static constexpr int BATCH_SIZE = 32;       // TLAB Batch Size
     static constexpr size_t CACHE_LINE = 64;    // Alignment for False Sharing
 };
-📄 License
+```
+## 📄 License
 This project is licensed under the MIT License.
