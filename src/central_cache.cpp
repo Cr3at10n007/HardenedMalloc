@@ -1,6 +1,11 @@
 #include "central_cache.h"
 #include "os_mem.h"
 #include <mutex>
+#ifdef _MSC_VER
+    #include <intrin.h>
+#else
+    #include <x86intrin.h>
+#endif 
 
 CentralCache g_central_cache;
 
@@ -25,7 +30,7 @@ int CentralCache::fetch_bulk(int idx, size_t size, void** results, int max_count
     std::lock_guard<SpinLock> guard(size_classes[idx].lock);
 
     int fetched = 0;
-    static thread_local uint32_t rng_state = 0x12345678;
+    static thread_local uint32_t rng_state = 0x12345678 ^ (uint32_t)__rdtsc(); //xor with time stamp counter
 
     while (fetched < max_count) {
         // Expand slab list if empty
